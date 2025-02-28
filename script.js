@@ -21,26 +21,32 @@ async function loadData() {
 }
 
 function checkEntry() {
-  event.preventDefault()
-  let input = document.getElementById("checkInput").value.trim().replace(/\s+/g, '').toLowerCase();
-  let parts = input.split(" - ").map((item) => item.trim());
-
-  if (parts.length !== 3) {
-    document.getElementById("result").innerText = "❌ Неправильний формат!";
-    return;
+    event.preventDefault();
+    let input = document.getElementById("checkInput").value.trim().toLowerCase();
+    // Розділяємо по " - "
+    let parts = input.split(" - ");
+  
+    if (parts.length !== 3) {
+      document.getElementById("result").innerText = "❌ Неправильний формат!";
+      return;
+    }
+  
+    // Видаляємо пробіли з кожного елемента
+    parts = parts.map(item => item.replace(/\s+/g, ''));
+  
+    let [country, product, store] = parts;
+    let missing = [];
+  
+    if (!countries.includes(country)) missing.push(`Країна: ${country}`);
+    if (!products.includes(product)) missing.push(`Продукт: ${product}`);
+    if (!stores.includes(store)) missing.push(`Магазин: ${store}`);
+  
+    document.getElementById("result").innerHTML =
+      missing.length === 0
+        ? "✅ Всі елементи є в списках!"
+        : "❌ Відсутні: <br>" + missing.join("<br>");
   }
-
-  let [country, product, store] = parts;
-  let missing = [];
-
-  if (!countries.includes(country)) missing.push(`Країна: ${country}`);
-  if (!products.includes(product)) missing.push(`Продукт: ${product}`);
-  if (!stores.includes(store)) missing.push(`Магазин: ${store}`);
-
-  document.getElementById("result").innerHTML =
-    missing.length === 0
-      ? "✅ Всі елементи є в списках!"
-      : "❌ Відсутні: <br>" + missing.join("<br>");
-}
+  
+  
 
 loadData();
