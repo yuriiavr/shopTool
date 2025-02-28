@@ -23,7 +23,6 @@ async function loadData() {
 function checkEntry() {
     event.preventDefault();
     let input = document.getElementById("checkInput").value.trim().toLowerCase();
-    // Розділяємо по " - "
     let parts = input.split(" - ");
   
     if (parts.length !== 3) {
@@ -31,7 +30,6 @@ function checkEntry() {
       return;
     }
   
-    // Видаляємо пробіли з кожного елемента
     parts = parts.map(item => item.replace(/\s+/g, ''));
   
     let [country, product, store] = parts;
