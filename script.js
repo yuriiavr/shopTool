@@ -22,7 +22,7 @@ async function loadData() {
 
 function checkEntry() {
   event.preventDefault()
-  let input = document.getElementById("checkInput").value.trim().toLowerCase();
+  let input = document.getElementById("checkInput").value.trim().replace(/\s+/g, '').toLowerCase();
   let parts = input.split(" - ").map((item) => item.trim());
 
   if (parts.length !== 3) {
