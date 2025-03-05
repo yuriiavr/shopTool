@@ -1,50 +1,84 @@
-let countries = [],
-  products = [],
-  stores = [];
-
-const JSON_URL = "https://api.jsonbin.io/v3/b/67c198e2e41b4d34e49e4958";
-
-async function loadData() {
+// Функція для завантаження даних geo.json
+async function fetchGeoData() {
   try {
-    let response = await fetch(JSON_URL, {});
-    let data = await response.json();
-
-    countries = data.record.countries.map((c) => c.trim().toLowerCase());
-    products = data.record.products.map((p) => p.trim().toLowerCase());
-    stores = data.record.stores.map((s) => s.trim().toLowerCase());
-
-    document.querySelector("h3").innerText = "Дані завантажено!";
+    const response = await fetch('https://byhabui.shop/json/geo.json');
+    if (!response.ok) throw new Error('Помилка завантаження geo.json');
+    const geoData = await response.json();
+    return geoData;
   } catch (error) {
-    console.error("Помилка завантаження JSON", error);
-    document.querySelector("h3").innerText = "❌ Помилка завантаження!";
+    console.error('Помилка завантаження geo.json:', error);
+    return null;
   }
 }
 
-function checkEntry() {
-    event.preventDefault();
-    let input = document.getElementById("checkInput").value.trim().toLowerCase();
-    let parts = input.split(" - ");
-  
-    if (parts.length !== 3) {
-      document.getElementById("result").innerText = "❌ Неправильний формат!";
-      return;
+// Функція для отримання списку папок з images
+async function fetchImageFolders() {
+  try {
+    const response = await fetch('https://byhabui.shop/images/');
+    if (!response.ok) throw new Error('Помилка завантаження images/');
+    const htmlText = await response.text();
+
+    // Припустимо, що імена папок містяться у тегах <a href="folderName/"> 
+    const folderNames = [];
+    const regex = /href="([^"]+\/)"/g;
+    let match;
+    while ((match = regex.exec(htmlText)) !== null) {
+      // Видаляємо заключний слеш і переводимо в нижній регістр
+      const folder = match[1].replace(/\/$/, '').toLowerCase();
+      folderNames.push(folder);
     }
+    // Унікальні значення
+    return [...new Set(folderNames)];
+  } catch (error) {
+    console.error('Помилка завантаження папок з images:', error);
+    return [];
+  }
+}
+
+// Функція перевірки введеного запиту
+async function checkEntry() {
+  event.preventDefault(event);
   
-    parts = parts.map(item => item.replace(/\s+/g, ''));
+  let input = document.getElementById("checkInput").value.trim();
+  const parts = input.split(" - ");
   
-    let [country, product, store] = parts;
-    let missing = [];
-  
-    if (!countries.includes(country)) missing.push(`Країна: ${country}`);
-    if (!products.includes(product)) missing.push(`Продукт: ${product}`);
-    if (!stores.includes(store)) missing.push(`Магазин: ${store}`);
-  
-    document.getElementById("result").innerHTML =
-      missing.length === 0
-        ? "✅ Всі елементи є в списках!"
-        : "❌ Відсутні: <br>" + missing.join("<br>");
+  if (parts.length !== 3) {
+    document.getElementById("result").innerText = "❌ Неправильний формат!";
+    return;
   }
   
+  // Нормалізуємо введені дані (видаляємо зайві пробіли, переводимо в нижній регістр)
+  const [country, product, store] = parts.map(item => item.trim().toLowerCase());
   
-
-loadData();
+  // Завантажуємо дані одночасно
+  const [geoData, folderNames] = await Promise.all([fetchGeoData(), fetchImageFolders()]);
+  
+  let missing = [];
+  
+  // Перевірка першої частини: країна
+  if (geoData) {
+    // Припускаємо, що geoData є об'єктом, де ключі – це допустимі країни
+    if (!(country in geoData)) {
+      missing.push(`Країна: ${country}`);
+    }
+  } else {
+    missing.push("Не вдалося завантажити дані geo.json");
+  }
+  
+  // Перевірка другої частини: продукт
+  if (!folderNames.includes(product)) {
+    missing.push(`Продукт: ${product}`);
+  }
+  
+  // Перевірка третьої частини: магазин
+  if (!folderNames.includes(store)) {
+    missing.push(`Магазин: ${store}`);
+  }
+  
+  // Вивід результатів перевірки
+  if (missing.length === 0) {
+    document.getElementById("result").innerHTML = "✅ Всі елементи є!";
+  } else {
+    document.getElementById("result").innerHTML = "❌ Відсутні: <br>" + missing.join("<br>");
+  }
+}
