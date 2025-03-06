@@ -41,7 +41,7 @@ async function checkEntry() {
     return;
   }
   
-  const [country, product, store] = parts.map(item => item.trim().toLowerCase());
+  const [country, product, store] = parts.map(item => item.trim().replace(/\s+/g, '').toLowerCase());
   
   const [geoData, folderNames] = await Promise.all([fetchGeoData(), fetchImageFolders()]);
   
