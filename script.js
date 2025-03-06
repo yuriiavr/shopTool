@@ -70,28 +70,28 @@ async function checkEntry() {
   }
 }
 
-let currentVideo = 1;
-    
-    function toggleVideo() {
-      let visibleVideo, hiddenVideo;
-      
-      if (currentVideo === 1) {
-        visibleVideo = document.getElementById('videoPlayer1');
-        hiddenVideo = document.getElementById('videoPlayer2');
-      } else {
-        visibleVideo = document.getElementById('videoPlayer2');
-        hiddenVideo = document.getElementById('videoPlayer1');
-      }
-      
-      const currentTime = visibleVideo.currentTime;
-      
 
-      hiddenVideo.currentTime = currentTime;
-      hiddenVideo.play();
-      
-      
-      visibleVideo.style.display = 'none';
-      hiddenVideo.style.display = 'block';
-      
-      currentVideo = currentVideo === 1 ? 2 : 1;
-    }
+let currentVideo = 1;
+
+function toggleVideo() {
+  let activeVideo, inactiveVideo;
+  
+  if (currentVideo === 1) {
+    activeVideo = document.getElementById("videoPlayer1");
+    inactiveVideo = document.getElementById("videoPlayer2");
+  } else {
+    activeVideo = document.getElementById("videoPlayer2");
+    inactiveVideo = document.getElementById("videoPlayer1");
+  }
+  
+  const currentTime = activeVideo.currentTime;
+  
+  inactiveVideo.currentTime = currentTime;
+  inactiveVideo.play();
+
+  activeVideo.style.opacity = 0;
+  inactiveVideo.style.opacity = 1;
+
+  currentVideo = currentVideo === 1 ? 2 : 1;
+}
+

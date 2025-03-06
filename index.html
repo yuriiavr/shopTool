@@ -1,76 +1,130 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Перевірка товару</title>
     <style>
-        body {
-          font-family: Arial, sans-serif;
-          max-width: 700px;
-          margin: auto;
-          text-align: center;
-        }
-        form {
-          display: flex;
-        }
-        input, button {
-          margin: 5px;
-          padding: 10px;
-        }
-        input {
-          width: 100%;
-        }
-        button {
-          cursor: pointer;
-        }
-        ul {
-          list-style: none;
-          padding: 0;
-        }
-        li {
-          margin: 3px 0;
-          padding: 5px;
-          background: #f4f4f4;
-          border-radius: 5px;
-        }
-        video {
-            max-width: 500px;
-            border: 0;
-            outline: none;
-            cursor: pointer;
-            margin: 0 auto;
-        }
-        #videoPlayer1{
-            display: block;
-        }
-        #videoPlayer2 {
-            display: none;
-        }
-      </style>
-</head>
-<body>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 700px;
+        margin: auto;
+        text-align: center;
+      }
+      form {
+        display: flex;
+      }
+      input,
+      button {
+        margin: 5px;
+        padding: 10px;
+      }
+      input {
+        width: 100%;
+      }
+      button {
+        cursor: pointer;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        margin: 3px 0;
+        padding: 5px;
+        background: #f4f4f4;
+        border-radius: 5px;
+      }
+      video {
+        max-width: 500px;
+        border: 0;
+        outline: none;
+        cursor: pointer;
+        margin: 0 auto;
+      }
+      .video-wrapper {
+        position: relative;
+        width: 500px;
+        margin: auto;
+      }
+      .video-wrapper video {
+        width: 100%;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: opacity 0.2s ease-in-out;
+      }
+
+      #videoPlayer1 {
+        opacity: 1;
+        z-index: 2;
+      }
+      #videoPlayer2 {
+        opacity: 0;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
     <h2>Перевірка товару</h2>
 
     <form onsubmit="checkEntry()">
-        <input type="text" id="checkInput" autocomplete="off" placeholder="US - Xiaomi Mi Pro 2 - Walmart">
-        <button type="submit">Перевірити</button>
+      <input
+        type="text"
+        id="checkInput"
+        autocomplete="off"
+        placeholder="US - Xiaomi Mi Pro 2 - Walmart"
+      />
+      <button type="submit">Перевірити</button>
     </form>
 
-    <p id="result"></p>    
-    
-    <video id="videoPlayer1" preload="auto" loop autoplay muted onclick="toggleVideo()">
-        <source src="videos/dimon-darof.mp4" type="video/mp4">
+    <p id="result"></p>
+
+    <div
+      class="video-wrapper"
+      style="position: relative; width: 500px; height: auto"
+    >
+      <video
+        id="videoPlayer1"
+        preload="auto"
+        loop
+        autoplay
+        muted
+        style="
+          width: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          transition: opacity 0.2s ease-in-out;
+          opacity: 1;
+        "
+        onclick="toggleVideo()"
+      >
+        <source src="videos/dimon-darof.mp4" type="video/mp4" />
         Ваш браузер не підтримує відео.
       </video>
 
-      <video id="videoPlayer2" preload="auto" loop muted onclick="toggleVideo()">
-        <source src="videos/nsf.webm" type="video/mp4">
+      <video
+        id="videoPlayer2"
+        preload="auto"
+        loop
+        muted
+        style="
+          width: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          transition: opacity 0.2s ease-in-out;
+          opacity: 0;
+        "
+        onclick="toggleVideo()"
+      >
+        <source src="videos/nsf.webm" type="video/mp4" />
         Ваш браузер не підтримує відео.
       </video>
-    
-      <p>Нажми 😏</p>
+    </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
