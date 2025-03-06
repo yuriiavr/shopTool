@@ -30,23 +30,42 @@ async function fetchImageFolders() {
   }
 }
 
+function showPushNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.classList.add('push-notification', type);
+  notification.innerHTML = message;
+  document.body.appendChild(notification);
+
+  setTimeout(() => {
+    notification.classList.add('hide');
+    setTimeout(() => {
+      notification.remove();
+    }, 300); 
+  }, 5000);
+}
+
 async function checkEntry() {
-  event.preventDefault(event);
-  
+  event.preventDefault();
+
   let input = document.getElementById("checkInput").value.trim();
   const parts = input.split(" - ");
-  
+
   if (parts.length !== 3) {
-    document.getElementById("result").innerText = "❌ Неправильний формат!";
+    showPushNotification("<img src='img/wrong.gif' width='80'> Неправильний формат!", "error");
     return;
   }
-  
-  const [country, product, store] = parts.map(item => item.trim().replace(/\s+/g, '').toLowerCase());
-  
-  const [geoData, folderNames] = await Promise.all([fetchGeoData(), fetchImageFolders()]);
-  
+
+  const [country, product, store] = parts.map(item =>
+    item.trim().replace(/\s+/g, '').toLowerCase()
+  );
+
+  const [geoData, folderNames] = await Promise.all([
+    fetchGeoData(),
+    fetchImageFolders()
+  ]);
+
   let missing = [];
-  
+
   if (geoData) {
     if (!(country in geoData)) {
       missing.push(`Країна: ${country}`);
@@ -54,19 +73,22 @@ async function checkEntry() {
   } else {
     missing.push("Не вдалося завантажити дані geo.json");
   }
-  
+
   if (!folderNames.includes(product)) {
     missing.push(`Продукт: ${product}`);
   }
-  
+
   if (!folderNames.includes(store)) {
     missing.push(`Магазин: ${store}`);
   }
-  
+
   if (missing.length === 0) {
-    document.getElementById("result").innerHTML = "✅ Всі елементи є!";
+    showPushNotification('<img src="img/ok.gif" width="100"> Всі елементи є!', "success");
   } else {
-    document.getElementById("result").innerHTML = "❌ Відсутні: <br>" + missing.join("<br>");
+    showPushNotification(
+      `<img src="img/no.gif" width="80" style="margin-right:20px">Відсутні: <br>${missing.join("<br>")}`,
+      "error"
+    );
   }
 }
 

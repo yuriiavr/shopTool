@@ -64,10 +64,67 @@
         opacity: 0;
         z-index: 1;
       }
+
+      .alert {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .alert2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      #result {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .push-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        opacity: 1;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+      }
+      .push-notification.success {
+        border-left: 5px solid green;
+        display: flex;
+        align-items: center;
+        padding-right: 50px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .push-notification.error {
+        border-left: 5px solid red;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .push-notification.hide {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
     </style>
   </head>
   <body>
     <h2>Перевірка товару</h2>
+    <div id="result"></div>
 
     <form onsubmit="checkEntry()">
       <input
@@ -78,8 +135,6 @@
       />
       <button type="submit">Перевірити</button>
     </form>
-
-    <p id="result"></p>
 
     <div
       class="video-wrapper"
@@ -126,5 +181,10 @@
     </div>
 
     <script src="script.js"></script>
+    <script
+      type="text/javascript"
+      async
+      src="https://tenor.com/embed.js"
+    ></script>
   </body>
 </html>
