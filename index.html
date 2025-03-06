@@ -6,35 +6,44 @@
     <title>Перевірка товару</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 700px;
-            margin: auto;
-            text-align: center;
+          font-family: Arial, sans-serif;
+          max-width: 700px;
+          margin: auto;
+          text-align: center;
         }
-        form{
-            display: flex;
+        form {
+          display: flex;
         }
         input, button {
-            margin: 5px;
-            padding: 10px;
+          margin: 5px;
+          padding: 10px;
         }
-        input{
-            width: 100%;
+        input {
+          width: 100%;
         }
-        button{
-            cursor: pointer;
+        button {
+          cursor: pointer;
         }
         ul {
-            list-style: none;
-            padding: 0;
+          list-style: none;
+          padding: 0;
         }
         li {
-            margin: 3px 0;
-            padding: 5px;
-            background: #f4f4f4;
-            border-radius: 5px;
+          margin: 3px 0;
+          padding: 5px;
+          background: #f4f4f4;
+          border-radius: 5px;
         }
-    </style>
+        video {
+            max-width: 500px;
+            border: 0;
+            outline: none;
+            cursor: pointer;
+        }
+        #videoPlayer2 {
+            display: none;
+        }
+      </style>
 </head>
 <body>
     <h2>Перевірка товару</h2>
@@ -46,10 +55,16 @@
 
     <p id="result"></p>    
     
-    <video src="dimon-darof.mp4" loop autoplay muted style="border: 0; outline: none; max-width: 500px;"></video>
-    <br>
-    <span>А тепер поясни дівчині, що це чекер</span>
+    <video id="videoPlayer1" preload="auto" loop autoplay muted onclick="toggleVideo()">
+        <source src="videos/dimon-darof.mp4" type="video/mp4">
+        Ваш браузер не підтримує відео.
+      </video>
 
+      <video id="videoPlayer2" preload="auto" loop muted onclick="toggleVideo()">
+        <source src="videos/nsf.webm" type="video/mp4">
+        Ваш браузер не підтримує відео.
+      </video>
+    
     <script src="script.js"></script>
 </body>
 </html>

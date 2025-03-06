@@ -69,3 +69,29 @@ async function checkEntry() {
     document.getElementById("result").innerHTML = "❌ Відсутні: <br>" + missing.join("<br>");
   }
 }
+
+let currentVideo = 1;
+    
+    function toggleVideo() {
+      let visibleVideo, hiddenVideo;
+      
+      if (currentVideo === 1) {
+        visibleVideo = document.getElementById('videoPlayer1');
+        hiddenVideo = document.getElementById('videoPlayer2');
+      } else {
+        visibleVideo = document.getElementById('videoPlayer2');
+        hiddenVideo = document.getElementById('videoPlayer1');
+      }
+      
+      const currentTime = visibleVideo.currentTime;
+      
+
+      hiddenVideo.currentTime = currentTime;
+      hiddenVideo.play();
+      
+      
+      visibleVideo.style.display = 'none';
+      hiddenVideo.style.display = 'block';
+      
+      currentVideo = currentVideo === 1 ? 2 : 1;
+    }
