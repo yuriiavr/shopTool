@@ -126,15 +126,9 @@
     <h2>Перевірка товару</h2>
     <div id="result"></div>
 
-    <form onsubmit="checkEntry()">
-      <input
-        type="text"
-        id="checkInput"
-        autocomplete="off"
-        placeholder="US - Xiaomi Mi Pro 2 - Walmart"
-      />
-      <button type="submit">Перевірити</button>
-    </form>
+      <input type="file" id="imageInput" />
+      <button onclick="uploadImage()">Загрузить</button>
+      <p id="result"></p>
 
     <div
       class="video-wrapper"

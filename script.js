@@ -1,103 +1,65 @@
-async function fetchGeoData() {
-  try {
-    const response = await fetch('https://byhabui.shop/json/geo.json');
-    if (!response.ok) throw new Error('Помилка завантаження geo.json');
-    const geoData = await response.json();
-    return geoData;
-  } catch (error) {
-    console.error('Помилка завантаження geo.json:', error);
-    return null;
+async function uploadImage() {
+  const fileInput = document.getElementById("imageInput");
+  const resultEl = document.getElementById("result");
+
+  if (!fileInput.files.length) {
+    resultEl.textContent = "Выберите файл для загрузки";
+    return;
   }
-}
 
-async function fetchImageFolders() {
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("requireSignedURLs", "false");
+
   try {
-    const response = await fetch('https://byhabui.shop/images/');
-    if (!response.ok) throw new Error('Помилка завантаження images/');
-    const htmlText = await response.text();
+    const response = await fetch(
+      "https://api.cloudflare.com/client/v4/accounts/0fb5430cc41e86296e8cffa51593070b/images/v1",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer xA1k5aZ6ile-ymQpqLzxQFkcI9Dn46W10VbNRA3f",
+        },
+        body: formData,
+      }
+    );
 
-    const folderNames = [];
-    const regex = /href="([^"]+\/)"/g;
-    let match;
-    while ((match = regex.exec(htmlText)) !== null) {
-      const folder = match[1].replace(/\/$/, '').toLowerCase();
-      folderNames.push(folder);
+    const data = await response.json();
+
+    if (
+      data.success &&
+      data.result.variants &&
+      data.result.variants.length > 0
+    ) {
+      resultEl.innerHTML = `<a href="${data.result.variants[0]}" target="_blank">Ссылка на картинку</a>`;
+    } else {
+      resultEl.textContent =
+        "Загрузка не удалась: " + JSON.stringify(data.errors);
     }
-    return [...new Set(folderNames)];
-  } catch (error) {
-    console.error('Помилка завантаження папок з images:', error);
-    return [];
+  } catch (err) {
+    resultEl.textContent = "Ошибка: " + err.message;
   }
 }
 
-function showPushNotification(message, type = 'success') {
-  const notification = document.createElement('div');
-  notification.classList.add('push-notification', type);
+function showPushNotification(message, type = "success") {
+  const notification = document.createElement("div");
+  notification.classList.add("push-notification", type);
   notification.innerHTML = message;
   document.body.appendChild(notification);
 
   setTimeout(() => {
-    notification.classList.add('hide');
+    notification.classList.add("hide");
     setTimeout(() => {
       notification.remove();
-    }, 300); 
+    }, 300);
   }, 5000);
 }
-
-async function checkEntry() {
-  event.preventDefault();
-
-  let input = document.getElementById("checkInput").value.trim();
-  const parts = input.split(" - ");
-
-  if (parts.length !== 3) {
-    showPushNotification("<img src='img/wrong.gif' width='80'> Неправильний формат!", "error");
-    return;
-  }
-
-  const [country, product, store] = parts.map(item =>
-    item.trim().replace(/\s+/g, '').toLowerCase()
-  );
-
-  const [geoData, folderNames] = await Promise.all([
-    fetchGeoData(),
-    fetchImageFolders()
-  ]);
-
-  let missing = [];
-
-  if (geoData) {
-    if (!(country in geoData)) {
-      missing.push(`Країна: ${country}`);
-    }
-  } else {
-    missing.push("Не вдалося завантажити дані geo.json");
-  }
-
-  if (!folderNames.includes(product)) {
-    missing.push(`Продукт: ${product}`);
-  }
-
-  if (!folderNames.includes(store)) {
-    missing.push(`Магазин: ${store}`);
-  }
-
-  if (missing.length === 0) {
-    showPushNotification('<img src="img/ok.gif" width="100"> Всі елементи є!', "success");
-  } else {
-    showPushNotification(
-      `<img src="img/no.gif" width="80" style="margin-right:20px">Відсутні: <br>${missing.join("<br>")}`,
-      "error"
-    );
-  }
-}
-
 
 let currentVideo = 1;
 
 function toggleVideo() {
   let activeVideo, inactiveVideo;
-  
+
   if (currentVideo === 1) {
     activeVideo = document.getElementById("videoPlayer1");
     inactiveVideo = document.getElementById("videoPlayer2");
@@ -105,9 +67,9 @@ function toggleVideo() {
     activeVideo = document.getElementById("videoPlayer2");
     inactiveVideo = document.getElementById("videoPlayer1");
   }
-  
+
   const currentTime = activeVideo.currentTime;
-  
+
   inactiveVideo.currentTime = currentTime;
   inactiveVideo.play();
 
@@ -116,4 +78,3 @@ function toggleVideo() {
 
   currentVideo = currentVideo === 1 ? 2 : 1;
 }
-
